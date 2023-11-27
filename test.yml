@@ -1,0 +1,35 @@
+---
+  - name: Gather Information from Azure VMs
+    hosts: hosts  # Replace with the actual inventory group containing your Azure VMs
+    become: true  # Run tasks with sudo
+    tasks:
+      - name: Gather OS Information
+        ansible.builtin.debug:
+          var: ansible_distribution
+
+      - name: Gather Date
+        ansible.builtin.debug:
+          var: ansible_date_time.date
+
+      # - name: Gather Last Reboot Date and Time
+      #   ansible.builtin.shell: |
+      #     who -b | awk '{print $3, $4}'
+      #   register: last_reboot
+      #   ansible.builtin.debug:
+      #     var: last_reboot.stdout
+
+      - name: Gather Hardware Configuration (CPU and Memory)
+        ansible.builtin.setup:
+        register: facts
+        ansible.builtin.debug:
+          var: facts.ansible_processor_vcpus
+        ansible.builtin.debug:
+          var: facts.ansible_memtotal_mb
+
+      - name: Gather Running Services
+        ansible.builtin.service_facts:
+        register: services
+        ansible.builtin.debug:
+          var: services.services
+
+# Add more tasks as needed

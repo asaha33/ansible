@@ -1,0 +1,6 @@
+---
+  - name: show the date
+    hosts: all
+    tasks:
+    - name: shell module
+      command:  date
